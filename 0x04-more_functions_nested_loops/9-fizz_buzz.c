@@ -1,12 +1,7 @@
 #include <stdio.h>
-#include "main.h"
 /**
  * main - Entry point
- * multiples of 3 print Fizz instead of the number
- * multiples of 5 print Buzz
- * numbers which are multiples of both 3 and 5 print FizzBuzz
- * Each number or word should be separated by a space
- * Return: Always 0 (success)
+ * Return: Alwayse 0 (success)
  */
 int main(void)
 {
