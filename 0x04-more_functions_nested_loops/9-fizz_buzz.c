@@ -6,21 +6,22 @@
  */
 int main(void)
 {
-	int n;
+	int a;
 
-	for (n = 1; n <= 100; n++)
+	for (a = 1; a <= 100; a++)
 	{
-		if (n % 3 == 0)
+		if (a % 3 == 0)
 			printf("Fizz");
-		else if (n % 5 == 0)
+		else if (a % 5 == 0)
 			printf("Buzz");
-		else if (n % 15 == 0)
+		else if (a % 3 == 0 && a % 5 == 0)
 			printf("FizzBuzz");
 		else
-			printf("%d", n);
-		if (n != 0)
+			printf("%d", a);
+		if (a != 100)
 			printf(" ");
+		else
+			printf("\n");
 	}
-	printf("\n");
 	return (0);
 }
