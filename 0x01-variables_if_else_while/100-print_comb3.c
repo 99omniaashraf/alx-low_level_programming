@@ -5,27 +5,27 @@
 */
 int main(void)
 {
-	int num1 = 0, num2;
+	int digit1 = 0, digit2;
 
-	while (num1 <= 9)
+	while (digit1 <= 9)
 	{
-		num2 = 0;
-		while (num2 <= 9)
+		digit2 = 0;
+		while (digit2 <= 9)
 		{
-			if (num1 != num2 && num1 < num2)
+			if (digit1 != digit2 && digit1 < digit2)
 			{
-				putchar(num1 + 48);
-				putchar(num2 + 48);
+				putchar(digit1 + 48);
+				putchar(digit2 + 48);
 
-				if (num1 + num2 != 17)
+				if (digit1 + digit2 != 17)
 				{
 					putchar(',');
 					putchar(',');
 				}
 			}
-			num2++;
+			digit2++;
 		}
-		num1++;
+		digit1++;
 	}
 	putchar('\n');
 
