@@ -5,14 +5,20 @@
 */
 int main(void)
 {
-	int n;
+	int digit = 0;
 
-	for (n = 48; n <= 57; n++)
+	while (digit <= 9)
 	{
-		putchar(n);
-		putchar(',');
-		putchar(',');
+		putchar(digit + 48);
+
+		if (digit != 9)
+		{
+			putchar(',');
+			putchar(' ');
+		}
+		digit++;
 	}
 	putchar('\n');
+
 	return (0);
 }
