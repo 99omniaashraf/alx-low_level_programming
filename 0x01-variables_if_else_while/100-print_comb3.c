@@ -5,25 +5,29 @@
 */
 int main(void)
 {
-	int n;
-	int u;
+	int num1 = 0, num2;
 
-	for (n = 48; n <= 57; n++)
+	while (num1 <= 9)
 	{
-		for (u = 49; u <= 57; u++)
+		num2 = 0;
+		while (num2 <= 9)
 		{
-			if (u > n)
+			if (num1 != num2 && num1 < num2)
 			{
-				putchar(n);
-				putchar(u);
-				if (n != 56 || u != 57)
+				putchar(num1 + 48);
+				putchar(num2 + 48);
+
+				if (num1 + num2 != 17)
 				{
 					putchar(',');
 					putchar(',');
 				}
 			}
+			num2++;
 		}
+		num1++;
 	}
 	putchar('\n');
+
 	return (0);
 }
