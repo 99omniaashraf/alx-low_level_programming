@@ -3,32 +3,42 @@
  * main - Entry point
  * Return: Always 0 (success)
 */
+
 int main(void)
 {
-	int n;
-	int u;
-	int w;
+	int digit1 = 0;
+	int digit2, digit3;
 
-	for (n = 48; n < 57; n++)
+	while (digit1 <= 9)
 	{
-		for (u = 49; u < 57; u++)
+		digit2 = 0;
+		while (digit2 <= 9)
 		{
-			for (w = 50; w < 57; w++)
+			digit3 = 0;
+			while (digit3 <= 9)
 			{
-				if (w > u && u > n)
+				if (digit1 != digit2 &&
+					digit1 < digit2 &&
+					digit2 != digit3 &&
+					digit2 < digit3)
 				{
-					putchar(n);
-					putchar(u);
-					putchar(w);
-					if (n != 56 || u != 57)
+					putchar(digit1 + 48);
+					putchar(digit2 + 48);
+					putchar(digit3 + 48);
+
+					if (digit1 + digit2 + digit3 != 24)
 					{
 						putchar(',');
-						putchar(',');
+						putchar(' ');
 					}
 				}
+				digit3++;
 			}
+			digit2++;
 		}
+		digit1++;
 	}
 	putchar('\n');
+
 	return (0);
 }
