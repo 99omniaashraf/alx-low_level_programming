@@ -5,28 +5,32 @@
 */
 int main(void)
 {
-	int n;
-	int z;
+	int num1 = 0, num2;
 
-	for (n = 0; n <= 99; n++)
+	while (num1 <= 99)
 	{
-		for (z = 0; z <= 99; z++)
+		num2 = num1;
+		while (num2 <= 99)
 		{
-			if (n != z)
+			if (num2 != num1)
 			{
-				putchar((n / 10) + 48);
-				putchar((n % 10) + 48);
+				putchar((num1 / 10) + 48);
+				putchar((num1 % 10) + 48);
 				putchar(' ');
-				putchar((z / 10) + 48);
-				putchar((z % 10) + 48);
-				if (n != 98 || z != 99)
+				putchar((num2 / 10) + 48);
+				putchar((num2 % 10) + 48);
+
+				if (num1 != 98 || num2 != 99)
 				{
 					putchar(',');
 					putchar(' ');
 				}
 			}
+			num2++;
 		}
+		num1++;
 	}
 	putchar('\n');
+
 	return (0);
 }
