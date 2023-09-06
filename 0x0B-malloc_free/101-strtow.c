@@ -1,78 +1,70 @@
-#include"main.h"
-#include <stddef.h>
+#include "main.h"
 #include <stdlib.h>
 /**
- * wrdcnt - helper function
+ * count_word - helper function
  * @s: string
- * Return: int
+ * Return: number
  */
-
-int wrdcnt(char *s)
+int count_word(char *s)
 {
-	int a;
-	int k = 0;
+	int a = 0, b, c = 0;
 
-	for (a = 0; s[a]; a++)
+	for (b = 0; s[b] != '\0'; b++)
 	{
-		if (s[a] == ' ')
-		{
-			if (s[a + 1] != ' ' && s[a + 1] != '\0')
-				k++;
-		}
+		if (s[b] == ' ')
+			a = 0;
 		else if (a == 0)
-			k++;
+		{
+			a = 1;
+			c++;
+		}
 	}
-	k++;
-	return (0);
+	return (c);
 }
-
 /**
- * strtow - splits a string into words
+ * **strtow - splits a string into words
  * @str: string
- * Return: pointer to an array of strings (words)
+ * Return: pointer to an array of strings (success)
+ * or NULL
  */
-
 char **strtow(char *str)
 {
-	int a, b, c, d;
-	int q = 0, z = 0;
-	char **v;
+	char **matrix, *tmp;
+	int i, k = 0, len = 0, words, c = 0, start, end;
 
-	if (str == NULL || *str == '\0')
+	while (*(str + len))
+		len++;
+	words = count_word(str);
+	if (words == 0)
 		return (NULL);
-	q = wrdcnt(str);
-	if (q == 1)
+
+	matrix = (char **)malloc(sizeof(char *) * (words + 1));
+	if (matrix == NULL)
 		return (NULL);
-	v = (char **)malloc(q * sizeof(char *));
-	if (v == NULL)
-		return (NULL);
-	v[q - 1] = NULL;
-	a = 0;
-	while (str[a])
+
+	for (i = 0; i <= len; i++)
 	{
-		if (str[a] != ' ' && (a == 0 || str[a - 1] == ' '))
+		if (str[i] == ' ' || str[i] == '\0')
 		{
-			for (b = 1; str[a + b] != ' ' && str[a + b]; b++)
-				;
-			b++;
-			v[z] = (char *)malloc(b * sizeof(char));
-			b--;
-			if (v[z] == NULL)
+			if (c)
 			{
-				for (c = 0; c < z; c++)
-					free(v[c]);
-				free(v[q - 1]);
-				free(v);
-				return (NULL);
+				end = i;
+				tmp = (char *)malloc(sizeof(char) * (c + 1));
+				if (tmp == NULL)
+					return (NULL);
+				while (start < end)
+				{
+					*tmp++ = str[start++];
+				}
+				*tmp = '\0';
+				matrix[k] = tmp - c;
+				k++;
+				c = 0;
 			}
-			for (d = 0; d < b; d++)
-				v[z][d] = str[a + d];
-			v[z][d] = '\0';
-			z++;
-			a += b;
 		}
-		else
-			a++;
+		else if (c++ == 0)
+			start = i;
 	}
-	return (v);
+	matrix[k] = NULL;
+	return (matrix);
 }
