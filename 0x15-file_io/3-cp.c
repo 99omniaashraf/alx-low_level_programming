@@ -1,4 +1,11 @@
 #include "main.h"
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#define BUF_SIZE 1024
 
 /**
  * main - check of the code
