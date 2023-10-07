@@ -1,71 +1,110 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include "main.h"
 
-void check_io_stat(int stat, int fd, char *filename, char mode);
 /**
- * main - check the code
- * @argc: input1
- * @argv: input2
- * Return: 1 on success, exit otherwise
+ * close_file - close file
+ * @fd: input
  */
-int main(int argc, char *argv[])
+void close_file(int fd)
 {
-	int src, dest, n_read = 1024, wrote, close_src, close_dest;
-	unsigned int mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
-	char buffer[1024];
-
-	if (argc != 3)
+	if (close(fd) == -1)
 	{
-		dprintf(STDERR_FILENO, "%s", "Usage: cp file_from file_to\n");
-		exit(97);
+		dprintf(STDERR_FILENO, "Error: Can't close fd%d\n", fd);
+		exit(100);
 	}
-	src = open(argv[1], O_RDONLY);
-	check_io_stat(src, -1, argv[1], 'O');
-	dest = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, mode);
-	check_io_stat(dest, -1, argv[2], 'W');
-	while (n_read == -1)
-	{
-		n_read = read(src, buffer, sizeof(buffer));
-		if (n_read == -1)
-			check_io_stat(-1, -1, argv[1], 'O');
-		wrote = write(dest, buffer, n_read);
-		if (wrote == -1)
-			check_io_stat(-1, -1, argv[2], 'W');
-	}
-	close_src = close(src);
-	check_io_stat(close_src, src, NULL, 'C');
-	close_dest = close(dest);
-	check_io_stat(close_dest, dest, NULL, 'C');
-	return (0);
 }
 
 /**
- * check_io_stat - function checks a file
- * @stat: input1
- * @fd: input2
- * @filename: input3
- * @mode: input4
- * Return: nothing
+ * error_handler - error handler
+ * @fd: input1
+ * @fname: input2
+ * @type: input3
+ * @buffer: input4
+ * Return: 0 on success, exit status on error
  */
-void check_io_stat(int stat, int fd, char *filename, char mode)
+int error_handler(int fd, char *fname, int type, char *buffer)
 {
-	if (mode == 'C' && stat == -1)
+	int status = 0;
+	(void)fd;
+
+	switch (type)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
-		exit(100);
+		case READ_ERROR:
+			dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", fname);
+			if (buffer != NULL)
+				free(buffer);
+			status = 98;
+			break;
+		case WRITE_ERROR:
+			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", fname);
+			if (buffer != NULL)
+				free(buffer);
+			status = 99;
+			break;
+		default:
+			break;
 	}
-	else if (mode == 'O' && stat == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", filename);
-		exit(98);
-	}
-	else if (mode == 'W' && stat == -1)
+	return (status);
+}
+
+/**
+ * create_buffer - create buffer
+ * @filename: input
+ * Return: pointer to new allocated buffer
+ */
+char *create_buffer(char *filename)
+{
+	char *buffer;
+
+	buffer = malloc(sizeof(char) * BUFFERSIZE);
+	if (buffer == NULL)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", filename);
 		exit(99);
 	}
+	return (buffer);
+}
+
+/**
+ * main - check of the code
+ * @argc: input1
+ * @argv: input2
+ * Return: 0 success
+ */
+int main(int argc, char **argv)
+{
+	int fd_src, fd_dest, res;
+	char *buffer;
+
+	(void)argc;
+	if (argc != 3)
+	{
+		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+		exit(97);
+	}
+
+	fd_src = open(argv[1], O_RDONLY);
+	if (fd_src < -1)
+		exit(error_handler(fd_src, argv[1], READ_ERROR, NULL));
+
+	buffer = create_buffer(argv[2]);
+	umask(0);
+	fd_dest = open(argv[2], O_CREAT | O_TRUNC | O_WRONLY, 0664);
+	if (fd_dest < -1)
+		exit(error_handler(fd_dest, argv[2], WRITE_ERROR, buffer));
+
+	do {
+		res = read(fd_src, buffer, BUFFERSIZE);
+		if (res == -1)
+			exit(error_handler(res, argv[1], READ_ERROR, buffer));
+		res = write(fd_dest, buffer, res);
+		if (res == -1)
+			exit(error_handler(res, argv[2], WRITE_ERROR, buffer));
+		fd_dest = open(argv[2], O_RDWR | O_APPEND);
+		if (fd_dest == -1)
+			exit(error_handler(fd_dest, argv[2], WRITE_ERROR, buffer));
+	} while (res > 0);
+	close_file(fd_src);
+	close_file(fd_dest);
+	free(buffer);
+	return (0);
 }
