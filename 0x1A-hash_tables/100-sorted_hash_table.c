@@ -31,16 +31,16 @@ shash_table_t *shash_table_create(unsigned long int size)
 
 /**
  * add_n_shash - adds a node.
- * @ht: pointer.
+ * @ht: head of the shash.
  * @key: key of the shash.
  * @value: value to store.
  * Return: created node.
  */
-shash_node_t *add_n_shash(shash_node_t **ht, const char *key, const char *value)
+shash_node_t *add_n_shash(shash_node_t **h, const char *key, const char *value)
 {
 	shash_node_t *tmp;
 
-	tmp = *ht;
+	tmp = *h;
 
 	while (tmp != NULL)
 	{
@@ -58,8 +58,8 @@ shash_node_t *add_n_shash(shash_node_t **ht, const char *key, const char *value)
 
 	tmp->key = strdup(key);
 	tmp->value = strdup(value);
-	tmp->next = *ht;
-	*ht = tmp;
+	tmp->next = *h;
+	*h = tmp;
 	return (tmp);
 }
 
