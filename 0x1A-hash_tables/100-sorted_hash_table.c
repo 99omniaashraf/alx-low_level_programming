@@ -137,7 +137,7 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 
 /**
  * shash_table_get - retrieves a value.
- * @ht; pointer
+ * @ht; pointer to the table.
  * @key: key of the shash.
  * Return: value of the shash.
  */
